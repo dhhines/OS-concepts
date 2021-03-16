@@ -66,34 +66,23 @@ void *genUpdate(void *param)
         //check column back --> n - 1
         if (t_data->n > 0)
             sum += t_data->currGrid[t_data->m - 1][t_data->n - 1];
-            //if (t_data->currGrid[t_data->m - 1][t_data->n - 1] == 1)
-                //count++;
 
         //check current column --> n
         sum += t_data->currGrid[t_data->m - 1][t_data->n];
-        //if (t_data->currGrid[t_data->m - 1][t_data->n] == 1)
-            //count++;
 
         //check column forward --> n + 1
         if (t_data->n < t_data->cols - 1)
             sum += t_data->currGrid[t_data->m - 1][t_data->n + 1];
-            //if (t_data->currGrid[t_data->m - 1][t_data->n + 1] == 1)
-                //count++;
     }
 
     //check the current row --> m
     //check column back --> n - 1
     if (t_data->n > 0)
         sum += t_data->currGrid[t_data->m][t_data->n - 1];
-        //if (t_data->currGrid[t_data->m][t_data->n - 1] == 1)
-            //count++;
 
     //check column forward --> n + 1
     if (t_data->n < t_data->cols - 1)
         sum += t_data->currGrid[t_data->m][t_data->n + 1];
-        //if (t_data->currGrid[t_data->m][t_data->n + 1] == 1)
-            //count++;
-
 
     //check the row forward and down --> m + 1
     if (t_data->m < t_data->rows - 1){
@@ -101,19 +90,13 @@ void *genUpdate(void *param)
         //check column back --> n - 1
         if (t_data->n > 0)
             sum += t_data->currGrid[t_data->m + 1][t_data->n - 1];
-            //if (t_data->currGrid[t_data->m + 1][t_data->n - 1] == 1)
-                //count++;
 
         //check current column --> n
         sum += t_data->currGrid[t_data->m + 1][t_data->n];
-        //if (t_data->currGrid[t_data->m + 1][t_data->n] == 1)
-            //count++;
 
         //check column forward --> n + 1
         if (t_data->n < t_data->cols - 1)
             sum += t_data->currGrid[t_data->m + 1][t_data->n + 1];
-            //if (t_data->currGrid[t_data->m + 1][t_data->n + 1] == 1)
-                //count++;
     }
 
     if (t_data->currGrid[t_data->m][t_data->n] == 1){
@@ -229,8 +212,6 @@ int main(int argc, char *argv[])
         for (int i = 0; i < numThreads; i++)
             pthread_join(threads[i], NULL);
 
-        //printf("Grid used for this generation updates:\n");
-        //printGrid(shrdData, 'c');
         printf("Next Generation Grid #%d:\n", shrdData->currGen + 1);
         printGrid(shrdData, 'n');
 
@@ -239,12 +220,6 @@ int main(int argc, char *argv[])
             memcpy(shrdData->currGrid[i], shrdData->nextGenGrid[i], shrdData->cols * sizeof(int));
             memset(shrdData->nextGenGrid[i], 0, shrdData->cols * sizeof(int));
         }
-
-        //printf("Now the newly updated *current grid*:\n");
-        //printGrid(shrdData, 'c');
-
-        //printf("The last Next Gen grid...  looks like the new *current grid*:\n");
-        //printGrid(shrdData, 'n');
     }
 
     //free the memory for each dynamic array in the Data struct
