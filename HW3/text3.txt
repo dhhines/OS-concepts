@@ -1,0 +1,7 @@
+This is a funny little text file that File3.txt
+has multiple lines that can be searched
+for the little word that was provided in the
+command line arguments
+which is funny because it is not just File3.txt
+that is easy to come up with little words
+to find.

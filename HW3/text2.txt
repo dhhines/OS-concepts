@@ -1,0 +1,7 @@
+This is a little text file that
+has multiple lines that can be searched
+for the word that was provided in the
+command line arguments aren't funny tho for File2.txt
+which is little because it is not 
+that easy to come up with words
+to find.

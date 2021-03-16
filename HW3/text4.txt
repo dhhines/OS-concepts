@@ -1,0 +1,2 @@
+Words that must be searched to
+find any funny ones that might be hiding in the text of File4.txt
