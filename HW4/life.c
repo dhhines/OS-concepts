@@ -55,9 +55,7 @@ void *genUpdate(void *param)
     //cast the void param pointer to the Data struct type using new struct declaration
     Data *t_data = (Data *)param;
 
-    //count of neighbors that are 1
-    //int count = 0;
-
+    //sum of all neighbors
     int sum = 0;
 
     //check the row back up --> m - 1
@@ -167,7 +165,7 @@ int main(int argc, char *argv[])
     shrdData->currGrid = (int **) malloc (shrdData->rows * sizeof(int *));
     shrdData->nextGenGrid = (int **) malloc (shrdData->rows * sizeof(int *));
 
-    //now loop through the rows to create the columns for each in dynamic memory
+    //now loop through the rows to create the columns for each in dynamic memory and zero them
     for (int i = 0; i < shrdData->rows; i++){
         shrdData->currGrid[i] = (int *) calloc (shrdData->cols, sizeof(int));
         shrdData->nextGenGrid[i] = (int *) calloc (shrdData->cols, sizeof(int));
