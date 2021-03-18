@@ -95,6 +95,7 @@ void *genUpdate(void *param)
     //add to sum the lower right cell (y+1),(x+1)
     sum += t_data->currGrid[y + 1][x + 1];
 
+    //set the cell result in next generation grid
     if (t_data->currGrid[y][x] == 1){
         if (sum == 2 || sum == 3)
             t_data->nextGenGrid[y][x] = 1;
@@ -177,6 +178,8 @@ int main(int argc, char *argv[])
     for (int i = 1; i < shrdData->trows - 1; i++)
         for (int j = 1; j < shrdData->tcols - 1; j++)
             fscanf(fp, "%d", &shrdData->currGrid[i][j]);
+
+    fclose(fp);
 
     //Print the current generation grid to the console
     printf("Initial grid:\n");
