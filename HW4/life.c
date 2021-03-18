@@ -19,7 +19,7 @@
  *
  * Compile commands: gcc -Wall -g -std=c99 life.c -o life -lpthread
  *
- * Usage: ./life <input file> <integer for generations>
+ * Usage: ./life <input file> <integer for # generations>
  */
 
 #include <stdlib.h>
@@ -33,7 +33,7 @@
 //struct for holding the shared data for threads
 typedef struct Data_struct {
     int currGen; //the current generation
-    int rows;  //number of rows in grid
+    int rows;  //number of rows in grid (from )
     int cols;  //number of columns in grid
     int trows;  //number of rows including ghost rows
     int tcols;  //number of columns including ghost columns
@@ -41,6 +41,7 @@ typedef struct Data_struct {
     int **nextGenGrid; //declare pointer to next gen 2D array; dynamically created later
     int m; //the current row in M x N grid to calculate
     int n; //the current column in M x N grid to calculate
+    int lock;  //0 for unlocked and 1 for locked
 }Data;
 
 /**
@@ -49,6 +50,10 @@ typedef struct Data_struct {
  * new value for the cell is set in the nextGenGrid array so as not to change the
  * currGrid values while the other threads work in parallel to update their respective
  * cells.
+ *
+ * Note: To ensure the threads obtain the proper values of m and n there is a lock in
+ * the shared Data struct that is released by the thread once the values are copied to
+ * local variables of y and x respectively.
  *
  * @param param  pointer to the parameter passed to the function
  */
@@ -61,6 +66,9 @@ void *genUpdate(void *param)
     int x = t_data->n;
     //y is the row
     int y = t_data->m;
+
+    //END LOCK
+    t_data->lock = 0;
 
     //sum of all neighbors
     int sum = 0;
@@ -86,47 +94,6 @@ void *genUpdate(void *param)
     sum += t_data->currGrid[y + 1][x];
     //add to sum the lower right cell (y+1),(x+1)
     sum += t_data->currGrid[y + 1][x + 1];
-
-    /*
-    //check the row back up --> m - 1
-    if (t_data->m > 0){
-
-        //check column back --> n - 1
-        if (t_data->n > 0)
-            sum += t_data->currGrid[t_data->m - 1][t_data->n - 1];
-
-        //check current column --> n
-        sum += t_data->currGrid[t_data->m - 1][t_data->n];
-
-        //check column forward --> n + 1
-        if (t_data->n < t_data->cols - 1)
-            sum += t_data->currGrid[t_data->m - 1][t_data->n + 1];
-    }
-
-    //check the current row --> m
-    //check column back --> n - 1
-    if (t_data->n > 0)
-        sum += t_data->currGrid[t_data->m][t_data->n - 1];
-
-    //check column forward --> n + 1
-    if (t_data->n < t_data->cols - 1)
-        sum += t_data->currGrid[t_data->m][t_data->n + 1];
-
-    //check the row forward and down --> m + 1
-    if (t_data->m < t_data->rows - 1){
-
-        //check column back --> n - 1
-        if (t_data->n > 0)
-            sum += t_data->currGrid[t_data->m + 1][t_data->n - 1];
-
-        //check current column --> n
-        sum += t_data->currGrid[t_data->m + 1][t_data->n];
-
-        //check column forward --> n + 1
-        if (t_data->n < t_data->cols - 1)
-            sum += t_data->currGrid[t_data->m + 1][t_data->n + 1];
-    }
-    */
 
     if (t_data->currGrid[y][x] == 1){
         if (sum == 2 || sum == 3)
@@ -165,7 +132,6 @@ void printGrid(Data *shrdData, char version)
         printf("\n");
     }
     printf("\n");
-
 }
 
 /**
@@ -187,14 +153,15 @@ int main(int argc, char *argv[])
     //create file buffer open to the filename passed as first command line argument
     FILE *fp = fopen(argv[1], "r");
 
-    //int rows;  //number of rows in grid
-    //int cols;  //number of columns in grid
     //scan in the first two values from file which are rows and columns of the lifeGrid (M x N)
     fscanf(fp, "%d%d", &shrdData->rows, &shrdData->cols);
 
     //set the total rows and total columns creating the ghost perimeter (will be all zeros)
     shrdData->trows = shrdData->rows + 2;
     shrdData->tcols = shrdData->cols + 2;
+
+    //set lock to 0 (open) initially
+    shrdData->lock = 0;
 
     //create the dynamic memory arrays in the struct using number of rows provided + 2
     shrdData->currGrid = (int **) malloc ((shrdData->trows) * sizeof(int *));
@@ -215,11 +182,7 @@ int main(int argc, char *argv[])
     printf("Initial grid:\n");
     printGrid(shrdData, 'c');
 
-    //int numThreads = shrdData->cols * shrdData->rows;
-
-    //array of threads used to calculate generations
-    //pthread_t threads[numThreads];
-
+    //array of threads used to calculate generations (2D array to match cell grid for simplicity)
     pthread_t threads[shrdData->rows][shrdData->cols];
 
     //set of thread attributes for each worker thread
@@ -237,24 +200,31 @@ int main(int argc, char *argv[])
         //loop through the total number of threads to have one for each grid cell to be updated
         for (int i = 1; i < shrdData->trows - 1; i++){
             for (int j = 1; j < shrdData->tcols - 1; j++ ){
+
+                //NOTE:  Need to create a locking scenario here or in the genUpdate function
+
+                //WAIT FOR UNLOCK
+                while (shrdData->lock == 1);
+                    //do nothing
+
+                //LOCK DATA FOR NEXT THREAD CREATION (thread will unlock once captures m x n values)
+                shrdData->lock = 1;
+
                 //set the m and n variables to the current cell value to be updated by the new thread
-                //shrdData->m = i / shrdData->cols;
-                //shrdData->n = i % shrdData->rows;
                 shrdData->m = i;
                 shrdData->n = j;
+
                 //create the new thread and pass it the id, attr, the function and data struct
                 pthread_create(&threads[i][j], &attr, genUpdate, shrdData);
-
-                //pthread_join(threads[i][j], NULL); //TEMPORARY!!! DO NOT LEAVE IN!!!
             }
         }
 
         //thread join for each thread ID when each thread completes its task
         for (int i = 1; i < shrdData->trows - 1; i++)
-            for (int j = 0; j < shrdData->tcols - 1 ; j++)
+            for (int j = 1; j < shrdData->tcols - 1 ; j++)
                 pthread_join(threads[i][j], NULL);
 
-
+        //print the next generation grid just produced
         printf("Next Generation Grid #%d:\n", shrdData->currGen + 1);
         printGrid(shrdData, 'n');
 
