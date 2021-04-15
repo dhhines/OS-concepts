@@ -81,10 +81,8 @@ int main(int argc, char* argv[]) {
    availCars = (int *) malloc (cars * sizeof(int));
 
    //populate the cars bounded buffer with the carID numbers
-   for (int i = 0; i < atoi(argv[1]); i++){
+   for (int i = 0; i < atoi(argv[1]); i++)
       availCars[i] = i + 1;
-      printf("CarID %d \n", availCars[i]);
-   }
 
    //create array for thread IDs using command line arg for number of riders
    pthread_t riderThrds[atoi(argv[2])];
