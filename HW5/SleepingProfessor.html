@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<title>Sleeping Professor Problem:</title>
+
+<style type="text/css">
+<!--
+/* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal {
+	mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+}
+span.SpellE {
+	mso-style-name:"";
+	mso-spl-e:yes;
+}
+span.GramE {
+	mso-style-name:"";
+	mso-gram-e:yes;
+}
+@page section1 {
+	size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;
+}
+div.Section1 {
+	page:Section1;
+}
+-->
+</style>
+
+</head>
+<body style='tab-interval:.5in' lang="EN-US" xml:lang="EN-US">
+<div class="Section1">
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>Sleeping Professor Problem:
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>
+    <o:p>&nbsp;</o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>
+    <o:p>&nbsp;</o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>
+    <o:p>&nbsp;</o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>/* <span class="GramE">Counting</span> semaphores. – <span
+class="GramE">the</span> integer value represents the initial count for the semaphore
+        */
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal" style='tab-stops:279.0pt'><b><span style='font-size:9.0pt;
+mso-bidi-font-size:12.0pt;font-family:Arial'>
+    <o:p>&nbsp;</o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>Semaphore students<span style='mso-spacerun:yes'>   </span><span
+class="GramE">=<span style='mso-spacerun:yes'>  </span>0</span>;<span
+style='mso-spacerun:yes'>      </span>/* number of students waiting for service
+        */
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>Semaphore professor <span class="GramE">=<span
+style='mso-spacerun:yes'>  </span>0</span>;<span style='mso-spacerun:yes'>      </span>/*<span style='mso-spacerun:yes'>  </span>number
+        of professors waiting for students */
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>Semaphore <span class="SpellE">mutex</span><span
+style='mso-spacerun:yes'>       </span><span class="GramE">=<span
+style='mso-spacerun:yes'>  </span>1</span>;<span style='mso-spacerun:yes'>      </span>/*<span style='mso-spacerun:yes'>  </span>for
+        mutual exclusion when accessing the waiting room */
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>
+    <o:p>&nbsp;</o:p>
+    </span></b></p>
+  <p class="MsoNormal"><span class="GramE"><b><span style='font-size:9.0pt;
+mso-bidi-font-size:12.0pt;font-family:Arial'>int</span></b></span><b><span
+style='font-size:9.0pt;mso-bidi-font-size:12.0pt;font-family:Arial'> waiting
+        = 0<span style='mso-spacerun:yes'>                    </span>/*<span
+style='mso-spacerun:yes'>  </span>students waiting for turn with professor */
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>
+    <o:p>&nbsp;</o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>Professor ( ) {
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                 </span><span
+class="GramE">while</span> (office hours) {
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                             </span><span class="GramE">wait</span> (students);<span
+style='mso-spacerun:yes'>           </span>/* go to sleep if no students */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                             </span><span class="GramE">wait</span> (<span class="SpellE">mutex</span>);<span
+style='mso-spacerun:yes'>              </span>/*<span
+style='mso-spacerun:yes'>  </span>acquire access to waiting room */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                              </span><span class="GramE">waiting</span> =
+      waiting – 1; /* decrement number of waiting students */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                              </span><span class="GramE">signal</span> (professor)
+      ;<span
+style='mso-spacerun:yes'>    </span>/*<span style='mso-spacerun:yes'>  </span>one
+      professor is now ready */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                              </span><span class="GramE">signal</span> (<span class="SpellE">mutex</span>);<span
+style='mso-spacerun:yes'>           </span>/*<span style='mso-spacerun:yes'>  </span>‘releasing’ waiting
+      room */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                              </span><span class="SpellE">ConsultWithStudent</span> (
+      );
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'> </span><span
+style='mso-spacerun:yes'>                 </span>}
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>
+    <o:p>&nbsp;</o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>}
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>Student ( ) {
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>              </span></span></b><span
+class="GramE"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;font-family:
+Arial'>wait</span></span><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'> (<span class="SpellE">mutex</span>);<span
+style='mso-spacerun:yes'>                        </span>/* enter critical section …waiting
+      room */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>              </span>If <span
+class="GramE">( waiting</span> &lt; 3 ) {<span
+style='mso-spacerun:yes'>                  </span>/* if there are free chairs
+    …*/
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                    </span><span
+class="GramE">waiting</span> = waiting + 1;
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                    </span><span
+class="GramE">signal</span> (students);<span style='mso-spacerun:yes'>        </span>/*
+      wakeup professor if necessary */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                    </span><span
+class="GramE">signal</span> (<span class="SpellE">mutex</span>);<span
+style='mso-spacerun:yes'>            </span>/*<span style='mso-spacerun:yes'>  </span>release
+      access to count of waiting students */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                    </span><span
+class="GramE">wait</span> (professor);<span style='mso-spacerun:yes'>          </span>/*<span style='mso-spacerun:yes'>   </span>wait
+      for professor if<span
+style='mso-spacerun:yes'>  </span>she is not available*/
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                    </span><span
+class="SpellE">GetHelpFromProf</span> ();
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>             </span><span
+class="GramE">else</span> {
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>                     </span><span
+class="GramE">signal</span> ( <span class="SpellE">mutex</span>);<span
+style='mso-spacerun:yes'>   </span>/*<span style='mso-spacerun:yes'>  </span>waiting
+      area<span style='mso-spacerun:yes'>  </span>is full, leave without waiting
+      */
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'><span style='mso-spacerun:yes'>             </span>}
+    <o:p></o:p>
+    </span></p>
+  <p class="MsoNormal"><b><span style='font-size:9.0pt;mso-bidi-font-size:12.0pt;
+font-family:Arial'>}
+    <o:p></o:p>
+    </span></b></p>
+  <p class="MsoNormal" style='tab-stops:9.0pt'>
+    <o:p>&nbsp;</o:p>
+  </p>
+</div>
+</body>
+</html>
