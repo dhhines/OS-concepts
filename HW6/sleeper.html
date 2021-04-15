@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>Bumper Car Questions</title></head><body>
+<h1> rideTime() and walkAroundTime() in Java, C, and C++ </h1>
+<hr />
+<h2>Sleeper.java</h2>
+<pre><b>
+import java.util.*;
+
+public class Sleeper {
+
+
+public static void rideTime () {
+
+Random generator = new Random ( );
+int milliseconds = (generator.nextInt(5) +1 ) * 1000;
+
+System.out.println (&quot;Riding for &quot; + milliseconds/1000 + &quot; seconds&quot;);
+
+try {
+            Thread.currentThread().sleep( milliseconds);
+                        }
+                        catch( InterruptedException e ){
+                        }
+
+}
+
+public static void walkAround () {
+
+Random generator = new Random ( );
+int milliseconds = (generator.nextInt(10) +1 ) * 1000;
+
+System.out.println (&quot;Walking around for  &quot; + milliseconds/1000 + &quot; seconds&quot;);
+
+try {
+            Thread.currentThread().sleep( milliseconds);
+                        }
+                        catch( InterruptedException e ){
+                        }
+
+}
+
+
+public static void main (String [] args) {
+
+// example of usage
+
+Sleeper.rideTime();
+System.out.println (&quot;Ride over&quot;);
+Sleeper.walkAround();
+System.out.println (&quot;Completed walking around ...&quot;);
+}
+}
+</b></pre>
+<hr />
+<h2>sleeper.h (For sleeper.c and sleeper.cpp)</h2>
+<pre><b>
+void rideTime();
+void walkAroundTime();
+</b></pre>
+<hr />
+<h2>sleeper.c </h2>
+<pre><b>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include "sleeper.h"
+
+/* example of usage
+
+int main( ) {
+rideTime();
+printf (&quot;Ride over\n&quot;);
+walkAroundTime();
+printf (&quot;Finished walking around  \n&quot;);
+}
+*/
+
+
+void rideTime() {
+
+int seconds = ( random() % 5) + 1 ;
+printf (&quot;Riding for  %d seconds \n &quot;, seconds);
+sleep (seconds); 
+
+}
+
+void walkAroundTime() {
+
+int seconds = (random() % 10) + 1 ;
+printf (&quot;Walking around for  %d \n &quot;, seconds);
+sleep (seconds);
+
+}
+
+</b></pre>
+<hr />
+<h2>sleeper.cpp</h2>
+<pre><b>
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;iostream&gt;
+#include "sleeper.h"
+
+using namespace std;
+
+/* example of usage 
+int main( ) {
+
+rideTime();
+cout &lt;&lt; &quot;Ride over&quot; &lt;&lt; endl;
+walkAroundTime();
+cout &lt;&lt;  &quot;Finished walking around &quot; &lt;&lt; endl;
+}
+ */
+
+
+void rideTime() {
+
+int seconds = (random() % 5) + 1 ;
+
+cout &lt;&lt; &quot;Riding for  &quot; &lt;&lt;  seconds &lt;&lt; &quot; seconds  &quot; &lt;&lt;endl;
+sleep (seconds); 
+
+}
+
+void walkAroundTime() {
+
+int seconds = (random() % 10) + 1 ;
+cout &lt;&lt;&quot;Walking around for  &quot;&lt;&lt;  seconds &lt;&lt; &quot; seconds  &quot;&lt;&lt;endl;
+sleep (seconds);
+}
+
+</b></pre>
+</body></html>
