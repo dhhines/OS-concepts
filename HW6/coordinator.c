@@ -34,8 +34,9 @@ pthread_mutex_t m1 = PTHREAD_MUTEX_INITIALIZER;
 //create mutex data structure for car buffer
 pthread_mutex_t m2 = PTHREAD_MUTEX_INITIALIZER;
 
-//conditional variable used for the monitor of availCars buffer
+//conditional variables used for the monitor of availCars buffer
 pthread_cond_t none = PTHREAD_COND_INITIALIZER;
+pthread_cond_t full = PTHREAD_COND_INITIALIZER;
 
 //total number of cars for riders from command line arg
 int cars;
@@ -43,8 +44,11 @@ int cars;
 //number of cars left in the buffer for use
 int numCars;
 
-//current slot in the buffer of cars
-int slot = 0;
+//current slot to get a cars from buffer
+int get = 0;
+
+//slot to put a car back in buffer
+int put = 0;
 
 //the rider (thread) number
 int rider = 1;
@@ -71,13 +75,16 @@ int main(int argc, char* argv[]) {
 
    //count of bumper cars from command line arg
    cars = atoi(argv[1]);
+   numCars = cars;
 
    //initialize car array to number of cars using command line arg
    availCars = (int *) malloc (cars * sizeof(int));
 
    //populate the cars bounded buffer with the carID numbers
-   for (int i = 0; i < atoi(argv[1]); i++)
+   for (int i = 0; i < atoi(argv[1]); i++){
       availCars[i] = i + 1;
+      printf("CarID %d \n", availCars[i]);
+   }
 
    //create array for thread IDs using command line arg for number of riders
    pthread_t riderThrds[atoi(argv[2])];
@@ -125,15 +132,16 @@ void * riderFunc(){
    //loop while the coordinator continues to run (until main process exits)
    while (1){
 
-      printf("Rider %d is walking around the park.", r.riderNum);
+      printf("Rider %d is walking around the park. \n", r.riderNum);
+
       walkAroundTime();
 
       r.carID = getInLine();
 
-      printf("Rider %d is now riding in car %d.", r.riderNum, r.carID);
+      printf("Rider %d is now riding in car %d. \n", r.riderNum, r.carID);
       rideTime();
 
-      printf("Rider %d returned car %d.", r.riderNum, r.carID);
+      printf("Rider %d returned car %d. \n", r.riderNum, r.carID);
       returnCar(r.carID);
 
    }
@@ -158,11 +166,13 @@ int getInLine(){
    while (numCars == 0)
       pthread_cond_wait(&none, &m2);
 
-   carID = availCars[slot];
-   slot = (slot + 1) % cars;
+   carID = availCars[get];
+   get = (get + 1) % cars;
    numCars--;
 
    pthread_mutex_unlock(&m2);
+
+   pthread_cond_signal(&full);
 
    return carID;
 }
@@ -180,17 +190,16 @@ void returnCar (int carID){
 
    pthread_mutex_lock(&m2);
 
-   availCars[slot] = carID;
-   slot--;
+   //if the buffer is full then block until signal "full"
+   while(numCars == cars)
+      pthread_cond_wait(&full, &m2);
+
+   availCars[put] = carID;
+   put = (put + 1) % cars;
    numCars++;
 
    //release mutex lock
    pthread_mutex_unlock(&m2);
    //signal that there is a car now
    pthread_cond_signal(&none);
-
-
 }
-
-
-

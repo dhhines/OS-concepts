@@ -13,6 +13,7 @@
 
 CC = gcc
 CFLAGS = -Wall -std=c99 -g
+TFLAG = -lpthread
 SRC_DIR = ./
 BUILD_DIR = ./
 BIN_DIR = ./
@@ -22,7 +23,7 @@ PROGRAM = $(wildcard $(BIN_DIR)*.exe)
 
 # coordinator program target
 coord: coordinator.o sleeper.o
-	$(CC) $(CFLAGS) $(COORD_OBJ_LIST) -o $(BIN_DIR)coordinator
+	$(CC) $(CFLAGS) $(COORD_OBJ_LIST) -o $(BIN_DIR)coordinator $(TFLAG)
 
 # object file targets
 sleeper.o: $(SRC_DIR)sleeper.h
