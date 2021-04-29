@@ -11,9 +11,8 @@
  * The project is focused on solving the bounded buffer problem with monitors
  * and thread synchronization using POSIX C mutex from the pthread library.
  *
- * Compilation:
- *
- * Running Program:
+ * Compilation: use provided Makefile
+ *              -usage: "make" or "make clean"
  *
  */
 
